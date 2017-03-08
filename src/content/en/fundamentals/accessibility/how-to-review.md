@@ -1,12 +1,12 @@
 project_path: /web/_project.yaml
 book_path: /web/fundamentals/_book.yaml
-description: Why you should do an accessibility audit and how to go about it.
+description: How to review your site for accessibility issues.
 
 
 {# wf_updated_on: 2017-02-07 #}
 {# wf_published_on: 2017-02-07 #}
 
-# How To Do an Accessibility Audit {: .page-title }
+# How To Do an Accessibility Review {: .page-title }
 
 {% include "web/_shared/contributors/robdodson.html" %}
 
@@ -16,68 +16,25 @@ description: Why you should do an accessibility audit and how to go about it.
             data-autohide="1" data-showinfo="0" frameborder="0" allowfullscreen>
     </iframe>
   </div>
-When creating a web site or application, it’s important to consider that not all
-users see or experience the world in the same way. Because humans are diverse,
-and have a range of abilities, there may be some users who require additional
-help to access the content on a page. It’s important to consider the perspective
-of these users when designing and developing your site, and to routinely audit
-your site to test that it is flexible enough to cater to the needs of all users.
-This post covers the why and how of doing an accessibility audit to ensure that
-everyone can access your content.
+Determining if your web site or application is accessible can seem like an
+overwhelming task. If you are approaching accessibility for the first time, the
+sheer breadth of the topic can leave you wondering where to start - after all,
+by definition accessibility is about making sure that a diverse range of 
+abilities are accommodated, meaning there are a correspondingly diverse range of 
+issues to consider.
+
+In this post, I'm going to break down these issues into a logical, step by step
+process for reviewing an existing site for accessibility.
 </div>
-
-## Why should you do an accessibility audit?
-
-### In many countries it's required by law
-In countries like the United States and the U.K., disability rights are
-protected by law. For example, in the U.S., the Americans with Disabilities Act
-(ADA) forbids discrimination of users “on the basis of disability in the full
-and equal enjoyment of the goods, services, facilities, privileges, advantages
-or accommodations of any place of public accommodation.”
-([source](https://www.law.cornell.edu/uscode/text/42/12182))
-
-Similarly, the U.S. has section 508 of the Rehabilitation Act which applies to
-all federal agencies and those receiving federal funding. Section 508 requires
-"agencies give disabled employees and members of the public access to
-information that is comparable to access available to others."
-([source](https://www.section508.gov/content/learn/laws-and-policies))
-
-Ensuring that accessibility is ingrained in your process from the beginning can
-help to avoid potential legal issues down the line.
-
-### You could be missing out on customers
-The World Health Organization [estimates that about 15% of the population, or
-about 1 billion people have some form of
-disability](http://www.who.int/mediacentre/factsheets/fs352/en/). This number
-can be difficult to quantify because not everyone self-identifies as having a
-disability. For example, as we age our eyesight tends to degrade, but many folks
-who wear corrective lenses wouldn’t label themselves as having a disability.
-Still, these users benefit from accessibility techniques like ensuring proper
-color contrast for text and images, appropriate font sizes, and text zooming. If
-a site is not accessible to a user, they’ll likely take their business
-elsewhere.
-
-### Good accessibility === Good UX
-In general, focusing on accessibility forces you to consider your product from
-different user perspectives. You may find yourself asking questions like, "Can
-we make the keyboard navigation more efficient? Can we improve the contrast of
-this body copy? Should we move these buttons and labels closer together?"
-Invariably this leads to a product that is easier for all users to interact
-with.
-
-Now that you understand why it’s so important to audit for accessibility, the
-next step is to begin reviewing your site. It may seem daunting at first, so to
-help you scope the work ahead, this guide will break down the steps into
-relevant topic areas.
 
 ## Start with the keyboard
 <img src="imgs/ic_keyboard_black_24px.svg" class="attempt-right" alt="" width="120"/>
 For users who either cannot or choose not to use a mouse, keyboard navigation is
 their primary means of reaching everything on screen. This audience includes
 users with motor impairments, such as Repetitive Stress Injury (RSI) or
-paralysis, as well as screen reader users. The goal of a keyboard audit is to
-ensure that the site has a logical tab order and easily discernable focus
-styles.
+paralysis, as well as screen reader users. For a good keyboarding experience,
+the site should ideally have a logical tab order and easily discernable
+focus styles.
 
 Start by tabbing through your site. Ideally the order in which elements are
 focused should follow the DOM order. If you’re unsure which elements should
@@ -88,37 +45,42 @@ indicator (e.g., a focus ring).
 
 ### Key points
 
-- All focusable elements should have a focus indicator of some kind. It’s a very
-  common practice to disable focus styles without providing an alternative by
-  using `outline: none` in CSS, but this is an anti-pattern. If a keyboard user
-  can’t see what’s focused, they have no way of interacting with the page.
+- All focusable elements should have a focus indicator of some kind. It’s a
+  very common practice to disable focus styles without providing an alternative
+  by using `outline: none` in CSS, but this is an anti-pattern. If a keyboard
+  user can’t see what’s focused, they have no way of interacting with the page.
+  If you need to differentiate between mouse and keyboard focus for styling,
+  consider adding a library like
+  [what-input](https://github.com/ten1seven/what-input).
 
-- No controls should have a `tabindex` > 0. These controls will jump ahead of
-  everything else in the tab order, regardless of their position in the DOM.
-  This can be confusing for screen reader users as they tend to navigate the DOM
-  in a linear fashion.
+- Custom interactive controls should be focusable. If you use JavaScript to
+  turn a `<div>` into a fancy dropdown, it will not automatically be inserted
+  into the tab order. To make a custom control focusable, give it a
+  `tabindex=”0”`.
 
-- Custom interactive controls should be focusable. If you use JavaScript to turn
-  a `<div>` into a fancy dropdown, it will not automatically be inserted into
-  the tab order. To make a custom control focusable, give it a `tabindex=”0”`.
+- No controls should have a `tabindex` > 0. These controls will jump
+  ahead of everything else in the tab order, regardless of their position in the
+  DOM. This can be confusing for screen reader users as they tend to navigate
+  the DOM in a linear fashion.
 
-- Non-interactive content (e.g., headings) should not be focusable. Sometimes
-  developers add a `tabindex` to headings because they think they’re important.
-  This is also an anti-pattern because it makes keyboard users who can see the
-  screen less efficient. For screen reader users, the screen reader will already
-  announce these headings, so there’s no need to make them focusable.
+- Non-interactive content (e.g., headings) should not be focusable.
+  Sometimes developers add a `tabindex` to headings because they think they’re
+  important. This is also an anti-pattern because it makes keyboard users who
+  can see the screen less efficient. For screen reader users, the screen reader
+  will already announce these headings, so there’s no need to make them
+  focusable.
 
 - If new content is added to the page, make sure that the user’s focus is
-  directed to that content so they can take action on it. See [Managing Focus at
-  the Page
+  directed to that content so they can take action on it. See [Managing
+  Focus at the Page
   Level](/web/fundamentals/accessibility/focus/using-tabindex#managing_focus_at_the_page_level)
   for examples.
 
-- At no point should focus get trapped. Watch out for autocomplete widgets,
-  where keyboard focus may get stuck. The only time focus should be trapped is
-  in specific situations, such as displaying a modal, when you don't want the
-  user interacting with the rest of the page. See the guide on [Modals and
-  Keyboard
+- At no point should focus get trapped. Watch out for autocomplete
+  widgets, where keyboard focus may get stuck. The only time focus should be
+  trapped is in specific situations, such as displaying a modal, when you don't
+  want the user interacting with the rest of the page. See the guide on [Modals
+  and Keyboard
   Traps](/web/fundamentals/accessibility/focus/using-tabindex#modals_and_keyboard_traps)
   for an example.
 
@@ -126,7 +88,7 @@ indicator (e.g., a focus ring).
 If you’ve built a custom control then a user should be able to reach _all_ of
 its functionality using only the keyboard. See [Managing Focus In
 Components](/web/fundamentals/accessibility/focus/using-tabindex#managing_focus_in_components)
-for techniques on ensuring good keyboard access.
+for techniques on improving keyboard access.
 
 ### Don’t forget offscreen content
 Many sites have offscreen content that is present in the DOM but not visible,
@@ -140,17 +102,14 @@ for tips on how to deal with these elements.
 
 ## Try it with a screen reader
 <img src="imgs/ic_speaker_notes_black_24px.svg" class="attempt-right" alt="" width="100"/>
-After checking for general keyboard support, the next step is to ensure the page
-has proper semantics and there are no obstructions to screen reader navigation.
-If you’re unfamiliar with how semantic markup gets interpreted by assistive
-technology, see the [Introduction to
-Semantics](/web/fundamentals/accessibility/semantics-builtin/)
+Improving general keyboard support lays some groundwork for the next step, which
+is to make sure the page has proper labeling and semantics and there are no
+obstructions to screen reader navigation. If you’re unfamiliar with how semantic
+markup gets interpreted by assistive technology, see the [Introduction to
+Semantics](https://developers.google.com/web/fundamentals/accessibility/semantics-builtin/)
 for a refresher.
 
 ### Key points
-
-- A screen reader should be able to navigate to all content on the page. Make
-  sure no sections of the site are hidden or blocked from screen reader access.
 
 - All images should have proper `alt` text. The exception to this rule is when
   images are primarily for presentation purposes and are not essential pieces of
@@ -158,23 +117,26 @@ for a refresher.
   should set the value of the `alt` attribute to an empty string, e.g.,
   `alt=””`.
 
+- All controls should have a label. For custom controls this may require the use
+  of `aria-label` or `aria-labelledby`. See [ARIA Labels and
+  Relationships](https://developers.google.com/web/fundamentals/accessibility/semantics-aria/aria-labels-and-relationships)
+  for examples.
+
+- All custom controls should have an appropriate `role` and any required ARIA
+  attributes that confer their state. For example, a custom checkbox will need a
+  `role=”checkbox”` and `aria-checked=”true|false”` to properly convey its
+  state. See the [Introduction to
+  ARIA](https://developers.google.com/web/fundamentals/accessibility/semantics-aria/)
+  for a general overview of how ARIA can provide missing semantics for custom
+  controls.
+
 - The flow of information should make sense. Because screen readers navigate the
   page in DOM order, if you’ve used CSS to visually reposition elements they may
   be announced in a nonsensical sequence. If you need something to appear
   earlier in the page, try to physically move it earlier in the DOM.
 
-- Ensure that all controls have a label. For custom controls this may require
-  the use of `aria-label` or `aria-labelledby`. See [ARIA Labels and
-  Relationships](/web/fundamentals/accessibility/semantics-aria/aria-labels-and-relationships)
-  for examples.
-
-- Ensure that all custom controls have an appropriate `role` and any required
-  ARIA attributes that confer their state. For example, a custom checkbox will
-  need a `role=”checkbox”` and `aria-checked=”true|false”` to properly convey
-  its state. See the [Introduction to
-  ARIA](/web/fundamentals/accessibility/semantics-aria/)
-  for a general overview of how ARIA can provide missing semantics for custom
-  controls.
+- A screen reader should be able to navigate to all content on the page. Make
+  sure no sections of the site are hidden or blocked from screen reader access.
 
 - If content _should_ be hidden from a screen reader, for instance, if it’s
   offscreen or just presentational, make sure that content is set to
@@ -238,9 +200,9 @@ structure of your page can be used to guide the user’s experience.
   keys screen reader users typically use to move around the page will no longer
   work, and you will need to implement _all_ keyboard handling yourself.
 
-### Quickly audit headings and landmarks with a screen reader
+### Quickly review headings and landmarks with a screen reader
 Screen readers like VoiceOver and NVDA provide a context menu for skipping to
-important regions on the page. If you’re doing an accessibility audit, you can
+important regions on the page. If you’re doing an accessibility review, you can
 use these menus to get a quick overview of the page and determine if heading
 levels are appropriate and which landmarks are in use. To learn more check out
 these instructional videos on the basics of
@@ -290,14 +252,12 @@ in your report. Fixing these will help improve the overall user experience of
 your site.
 
 ## Wrapping Up
-Making accessibility audits a regular part of your team process, and doing these
-checks early and often, ensures that all users will be able to access the
-content of your site. Remember, good accessibility equals good UX!
+Making accessibility reviews a regular part of your team process, and doing
+these checks early and often, can help improve the overall experience of using
+your site. Remember, good accessibility equals good UX!
 
 ### Additional Resources
 
 - [Web Accessibility by Google](https://bit.ly/web-a11y)
 - [Accessibility Fundamentals](/web/fundamentals/accessibility/)
 - [A11ycasts](https://www.youtube.com/playlist?list=PLNYkxOF6rcICWx0C9LVWWVqvHlYJyqw7g)
-
-
